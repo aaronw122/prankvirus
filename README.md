@@ -1,27 +1,35 @@
 # PrankVirus
 
-A macOS menu-bar prank with two effects, each on its own hotkey. Use it on your
-own Mac or with the owner's agreement.
+A macOS prank with two effects, each on its own hotkey. Use it on your own Mac
+or with the owner's agreement.
 
 | Hotkey | Effect |
 |---|---|
-| **Control + Option + Command + A** | Glitch: the screen shakes, splits into red/green/blue copies and its colours scramble |
+| **Control + Option + Command + G** | Glitch: the screen shakes, splits into red/green/blue copies and its colours scramble |
 | **Control + Option + Command + S** | Shift: the whole screen, menu bar and Dock included, slides 300 points right |
 
 - Press the same hotkey again to turn an effect off; the other hotkey swaps effects.
-- Each effect turns itself off after **30 seconds**.
+- Each effect turns itself off after **30 minutes**.
 - No permission prompts: no Screen Recording, no Accessibility.
-- The eye icon in the menu bar has both toggles and **Quit**.
+- No menu bar icon or Dock tile: nothing on screen shows it is running.
 - Mouse clicks still land where the real windows are, not where they appear.
 
 ## Install
 
 ```bash
 brew install aaronw122/tap/prankvirus
+prankvirus check
 brew services start prankvirus
 ```
 
-`brew services start` also starts it at every login. To stop it now and at login:
+`prankvirus check` asks you to press each hotkey and confirms the press reaches
+PrankVirus on this Mac. It also flags a clashing macOS system shortcut. A key
+remapper such as Karabiner-Elements or BetterTouchTool can intercept a hotkey;
+the check catches that too. Another app using the same combination does not
+block PrankVirus, but that app's action would also run.
+
+`brew services start` runs it in the background, with nothing left in the
+terminal, and starts it again at every login. To stop it now and at login:
 
 ```bash
 brew services stop prankvirus
@@ -30,11 +38,9 @@ brew services stop prankvirus
 To remove it:
 
 ```bash
+brew services stop prankvirus
 brew uninstall prankvirus
 ```
-
-If AsciiVisor is installed too, stop it first (`brew services stop asciivisor`):
-both use Control + Option + Command + A, and only one app can own a hotkey.
 
 ## Build from source
 

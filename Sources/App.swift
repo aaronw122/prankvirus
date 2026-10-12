@@ -7,29 +7,25 @@ func log(_ msg: String) {
 
 /// The two overlays. Each has its own hotkey; pressing it again turns it off.
 enum Effect: UInt32 {
-    /// ⌃⌥⌘A: the shaky shader's jitter, RGB split and hue remap.
+    /// ⌃⌥⌘G: the shaky shader's jitter, RGB split and hue remap.
     case glitch = 1
     /// ⌃⌥⌘S: the whole display, menu bar and Dock included, pushed right.
     case shift = 2
 
+    /// 'PRVX': identifies this app's hotkeys in Carbon events.
+    static let hotKeySignature = OSType(0x50525658)
+
     var keyCode: Int {
         switch self {
-        case .glitch: return kVK_ANSI_A
+        case .glitch: return kVK_ANSI_G
         case .shift: return kVK_ANSI_S
         }
     }
 
-    var menuTitle: String {
+    var hotkeyLabel: String {
         switch self {
-        case .glitch: return "Glitch On/Off (30 seconds)"
-        case .shift: return "Shift Screen On/Off (30 seconds)"
-        }
-    }
-
-    var keyEquivalent: String {
-        switch self {
-        case .glitch: return "a"
-        case .shift: return "s"
+        case .glitch: return "Control-Option-Command-G"
+        case .shift: return "Control-Option-Command-S"
         }
     }
 
@@ -46,21 +42,22 @@ enum Effect: UInt32 {
     }
 }
 
-/// Menu-bar app that resamples the real desktop through private Core Animation
-/// backdrop filters. The pixels never reach this process, so macOS never asks
+/// Background app with no menu bar icon or Dock tile: the hotkeys are the only
+/// interface. It resamples the real desktop through private Core Animation
+/// backdrop filters, so the pixels never reach this process and macOS never asks
 /// for Screen Recording.
 class AppDelegate: NSObject, NSApplicationDelegate {
-    private var statusItem: NSStatusItem!
     private var signalSources: [DispatchSourceSignal] = []
     private var hotKeys: [EventHotKeyRef] = []
     private var windows: [NSWindow] = []
     private var animationTimer: Timer?
     private var active: Effect?
     private var start: TimeInterval?
-    private let overlayDuration: TimeInterval = 30
+    /// Safety net: with no menu bar icon, this is the only way out that does not
+    /// need the hotkey.
+    private let overlayDuration: TimeInterval = 30 * 60
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        setupStatusItem()
         setupSignalHandlers()
         setupHotKeys()
         NotificationCenter.default.addObserver(
@@ -89,26 +86,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
-    private func setupStatusItem() {
-        statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
-        statusItem.button?.image = NSImage(systemSymbolName: "eye", accessibilityDescription: "PrankVirus")
-        let menu = NSMenu()
-        for effect in [Effect.glitch, .shift] {
-            let item = NSMenuItem(title: effect.menuTitle, action: #selector(menuToggle(_:)),
-                                  keyEquivalent: effect.keyEquivalent)
-            item.keyEquivalentModifierMask = [.control, .option, .command]
-            item.tag = Int(effect.rawValue)
-            item.target = self
-            menu.addItem(item)
-        }
-        menu.addItem(NSMenuItem.separator())
-        menu.addItem(NSMenuItem(title: "Quit", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
-        statusItem.menu = menu
-    }
-
-    @objc private func menuToggle(_ sender: NSMenuItem) {
-        if let effect = Effect(rawValue: UInt32(sender.tag)) { toggle(effect) }
-    }
 
     /// Same effect again turns it off; the other effect replaces it.
     func toggle(_ effect: Effect) {
@@ -126,7 +103,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         animationTimer = timer
         RunLoop.main.add(timer, forMode: .common)
-        log("\(effect) ON (30-second timeout)")
+        log("\(effect) ON (\(Int(overlayDuration / 60))-minute timeout)")
     }
 
     private func buildWindows(_ effect: Effect) {
@@ -177,7 +154,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         windows.removeAll()
     }
 
-    /// Global ⌃⌥⌘A and ⌃⌥⌘S (Carbon hotkeys need no Accessibility permission).
+    /// Global ⌃⌥⌘G and ⌃⌥⌘S (Carbon hotkeys need no Accessibility permission).
     private func setupHotKeys() {
         var spec = EventTypeSpec(eventClass: OSType(kEventClassKeyboard), eventKind: UInt32(kEventHotKeyPressed))
         InstallEventHandler(GetApplicationEventTarget(), { _, event, userData in
@@ -193,7 +170,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         for effect in [Effect.glitch, .shift] {
             var ref: EventHotKeyRef?
-            let id = EventHotKeyID(signature: OSType(0x50525658), id: effect.rawValue) // 'PRVX'
+            let id = EventHotKeyID(signature: Effect.hotKeySignature, id: effect.rawValue)
             let status = RegisterEventHotKey(
                 UInt32(effect.keyCode), UInt32(controlKey | optionKey | cmdKey),
                 id, GetApplicationEventTarget(), 0, &ref
