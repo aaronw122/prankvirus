@@ -10,40 +10,53 @@ or with the owner's agreement.
 
 - Press the same hotkey again to turn an effect off; the other hotkey swaps effects.
 - Effects stay on until toggled off, unless started with a timeout (see below).
-- No permission prompts: no Screen Recording, no Accessibility.
-- No menu bar icon or Dock tile: nothing on screen shows it is running.
 - Mouse clicks still land where the real windows are, not where they appear.
 
-## Install
+## install
 
 ```bash
 brew install aaronw122/tap/prankvirus
+```
+
+## how to use
+
+### check that the keys actually work
+
+```bash
+## run: 
 prankvirus check
-prankvirus start
 ```
 
 `prankvirus check` asks you to press each hotkey and confirms the press reaches
-PrankVirus on this Mac. It also flags a clashing macOS system shortcut. A key
-remapper such as Karabiner-Elements or BetterTouchTool can intercept a hotkey;
-the check catches that too. Another app using the same combination does not
-block PrankVirus, but that app's action would also run.
+PrankVirus on this Mac. It also flags a clashing macOS system shortcut or key remappers.  
 
-`prankvirus start` runs it in the background, with nothing left in the
-terminal, and starts it again at every login. Effects stay on until their
-hotkey is pressed again. To have each effect turn itself off, give a number of
-minutes:
+**if you don't check this, you could enable it on your friends computer, and it would be super hard for them to turn it off. **
+
+### activate prank
+
+```bash
+## run: 
+prankvirus start
+```
+
+`prankvirus start` runs it in the background. you can toggle on and off with the key mappings: 
+1. **Control + Option + Command + G** for glitch
+2. **Control + Option + Command + S** for shift
+
+if you want to specify how much time you want it to run, instead use a number following the start. 
+(this is an additional safeguard if you are worried the keymappings might not work)
 
 ```bash
 prankvirus start -30
 ```
 
-Running `prankvirus start` again replaces the setting. To stop it now and at login:
+### stopping prank
 
 ```bash
 prankvirus stop
 ```
 
-To remove it:
+## removing the package:
 
 ```bash
 prankvirus stop
