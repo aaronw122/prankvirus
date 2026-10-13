@@ -3,28 +3,16 @@
 A macOS prank with two effects, each on its own hotkey. Use it on your own Mac
 or with the owner's agreement.
 
-| Hotkey | Effect |
-|---|---|
-| **Control + Option + Command + G** | Glitch: the screen shakes, splits into red/green/blue copies and its colours scramble |
-| **Control + Option + Command + S** | Shift: the whole screen, menu bar and Dock included, slides 300 points right |
+| Hotkey | Effect | Preview |
+|---|---|---|
+| **Control + Option + Command + G** | Glitch: the screen shakes, splits into red/green/blue copies and its colours scramble | <img src="docs/glitch.png" alt="Glitch effect: the screen split into shaking colour copies" width="360"> |
+| **Control + Option + Command + S** | Shift: the whole screen, menu bar and Dock included, slides 300 points right; the uncovered strip on the left goes black | <img src="docs/shift.png" alt="Shift effect: the screen pushed 300 points right with a black strip on the left" width="360"> |
 
 - Press the same hotkey again to turn an effect off; the other hotkey swaps effects.
 - Effects stay on until toggled off, unless started with a timeout (see below).
 - No permission prompts: no Screen Recording, no Accessibility.
 - No menu bar icon or Dock tile: nothing on screen shows it is running.
 - Mouse clicks still land where the real windows are, not where they appear.
-
-## Screenshots
-
-**Shift** (Control + Option + Command + S): the whole screen slides right and
-the uncovered strip on the left goes black.
-
-![Shift effect: the screen pushed 300 points right with a black strip on the left](docs/shift.png)
-
-**Glitch** (Control + Option + Command + G): the screen jitters, splits into
-colour copies and its colours scramble.
-
-![Glitch effect: the screen split into shaking colour copies](docs/glitch.png)
 
 ## Install
 
