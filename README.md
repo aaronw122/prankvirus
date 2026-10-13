@@ -14,6 +14,18 @@ or with the owner's agreement.
 - No menu bar icon or Dock tile: nothing on screen shows it is running.
 - Mouse clicks still land where the real windows are, not where they appear.
 
+## Screenshots
+
+**Shift** (Control + Option + Command + S): the whole screen slides right and
+the uncovered strip on the left goes black.
+
+![Shift effect: the screen pushed 300 points right with a black strip on the left](docs/shift.png)
+
+**Glitch** (Control + Option + Command + G): the screen jitters, splits into
+colour copies and its colours scramble.
+
+![Glitch effect: the screen split into shaking colour copies](docs/glitch.png)
+
 ## Install
 
 ```bash
