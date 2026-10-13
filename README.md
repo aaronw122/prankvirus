@@ -23,7 +23,6 @@ brew install aaronw122/tap/prankvirus
 ### check that the keys actually work
 
 ```bash
-## run: 
 prankvirus check
 ```
 
@@ -35,7 +34,6 @@ PrankVirus on this Mac. It also flags a clashing macOS system shortcut or key re
 ### activate prank
 
 ```bash
-## run: 
 prankvirus start
 ```
 
