@@ -5,8 +5,7 @@ import QuartzCore
 ///
 /// One `CABackdropLayer` resamples everything behind the window, offset by a
 /// fixed distance. Nothing else changes, so it reads as the Mac's own picture
-/// having slipped. The strip uncovered on the left repeats the screen's edge
-/// pixels, because the displacement filter clamps at the layer bounds.
+/// having slipped. The strip uncovered on the left is solid black.
 final class ShiftOverlayView: NSView {
     /// Points the picture moves right.
     static let shift: CGFloat = 300
@@ -38,6 +37,13 @@ final class ShiftOverlayView: NSView {
         // Without the opaque-alpha stage ~3.5% of the unshifted screen ghosts through.
         backdrop.filters = [warp] + (PrivateCA.opaqueAlpha().map { [$0] } ?? [])
         layer?.addSublayer(backdrop)
+
+        // The filter fills the uncovered strip on the left by stretching the
+        // screen's edge pixels into streaks. Cover it so nothing shows there.
+        let strip = CALayer()
+        strip.frame = CGRect(x: 0, y: 0, width: Self.shift, height: bounds.height)
+        strip.backgroundColor = CGColor(gray: 0, alpha: 1)
+        layer?.addSublayer(strip)
     }
 
     required init?(coder: NSCoder) { fatalError("Use init(frame:)") }
