@@ -30,7 +30,7 @@ prankvirus check
 `prankvirus check` asks you to press each hotkey and confirms the press reaches
 PrankVirus on this Mac. It also flags a clashing macOS system shortcut or key remappers.  
 
-**if you don't check this, you could enable it on your friends computer, and it would be super hard for them to turn it off. **
+**if you don't check this, you could enable it on your friends computer, and it would be super hard for them to turn it off.**
 
 ### activate prank
 
