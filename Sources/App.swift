@@ -53,9 +53,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private var animationTimer: Timer?
     private var active: Effect?
     private var start: TimeInterval?
-    /// Safety net: with no menu bar icon, this is the only way out that does not
-    /// need the hotkey.
-    private let overlayDuration: TimeInterval = 30 * 60
+    /// Read once at launch: `prankvirus start -N` saves N minutes and restarts the
+    /// service. Nil means an effect stays on until its hotkey is pressed again.
+    private let overlayDuration: TimeInterval? = Settings.timeoutMinutes.map { TimeInterval($0) * 60 }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         setupSignalHandlers()
@@ -86,7 +86,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
-
     /// Same effect again turns it off; the other effect replaces it.
     func toggle(_ effect: Effect) {
         let wasActive = active
@@ -103,7 +102,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         animationTimer = timer
         RunLoop.main.add(timer, forMode: .common)
-        log("\(effect) ON (\(Int(overlayDuration / 60))-minute timeout)")
+        log("\(effect) ON (\(overlayDuration.map { "\(Int($0 / 60))-minute timeout" } ?? "no timeout"))")
     }
 
     private func buildWindows(_ effect: Effect) {
@@ -138,7 +137,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private func update() {
         guard let start else { return }
         let elapsed = ProcessInfo.processInfo.systemUptime - start
-        guard elapsed < overlayDuration else { stop(); return }
+        if let overlayDuration, elapsed >= overlayDuration { stop(); return }
         for window in windows {
             (window.contentView as? GlitchOverlayView)?.time = elapsed
         }

@@ -9,7 +9,7 @@ or with the owner's agreement.
 | **Control + Option + Command + S** | Shift: the whole screen, menu bar and Dock included, slides 300 points right |
 
 - Press the same hotkey again to turn an effect off; the other hotkey swaps effects.
-- Each effect turns itself off after **30 minutes**.
+- Effects stay on until toggled off, unless started with a timeout (see below).
 - No permission prompts: no Screen Recording, no Accessibility.
 - No menu bar icon or Dock tile: nothing on screen shows it is running.
 - Mouse clicks still land where the real windows are, not where they appear.
@@ -19,7 +19,7 @@ or with the owner's agreement.
 ```bash
 brew install aaronw122/tap/prankvirus
 prankvirus check
-brew services start prankvirus
+prankvirus start
 ```
 
 `prankvirus check` asks you to press each hotkey and confirms the press reaches
@@ -28,17 +28,25 @@ remapper such as Karabiner-Elements or BetterTouchTool can intercept a hotkey;
 the check catches that too. Another app using the same combination does not
 block PrankVirus, but that app's action would also run.
 
-`brew services start` runs it in the background, with nothing left in the
-terminal, and starts it again at every login. To stop it now and at login:
+`prankvirus start` runs it in the background, with nothing left in the
+terminal, and starts it again at every login. Effects stay on until their
+hotkey is pressed again. To have each effect turn itself off, give a number of
+minutes:
 
 ```bash
-brew services stop prankvirus
+prankvirus start -30
+```
+
+Running `prankvirus start` again replaces the setting. To stop it now and at login:
+
+```bash
+prankvirus stop
 ```
 
 To remove it:
 
 ```bash
-brew services stop prankvirus
+prankvirus stop
 brew uninstall prankvirus
 ```
 
