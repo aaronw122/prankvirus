@@ -43,11 +43,15 @@ prankvirus start
 1. **Control + Option + Command + G** for glitch
 2. **Control + Option + Command + S** for shift
 
-if you want to specify how much time you want it to run, instead use a number following the start. 
+if you want to specify how much time you want it to run, instead use a number following the start.
 (this is an additional safeguard if you are worried the keymappings might not work)
 
+any number of minutes works, including decimals:
+
 ```bash
-prankvirus start -30
+prankvirus start -30     # 30 minutes
+prankvirus start -1.5    # 90 seconds
+prankvirus start -120    # 2 hours
 ```
 
 ### stopping prank

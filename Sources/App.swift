@@ -55,7 +55,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private var start: TimeInterval?
     /// Read once at launch: `prankvirus start -N` saves N minutes and restarts the
     /// service. Nil means an effect stays on until its hotkey is pressed again.
-    private let overlayDuration: TimeInterval? = Settings.timeoutMinutes.map { TimeInterval($0) * 60 }
+    private let overlayDuration: TimeInterval? = Settings.timeoutMinutes.map { $0 * 60 }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         setupSignalHandlers()
@@ -102,7 +102,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         animationTimer = timer
         RunLoop.main.add(timer, forMode: .common)
-        log("\(effect) ON (\(overlayDuration.map { "\(Int($0 / 60))-minute timeout" } ?? "no timeout"))")
+        log("\(effect) ON (\(overlayDuration.map { "timeout after \(ServiceCommands.describe(minutes: $0 / 60))" } ?? "no timeout"))")
     }
 
     private func buildWindows(_ effect: Effect) {
