@@ -65,6 +65,45 @@ prankvirus stop
 brew uninstall prankvirus
 ```
 
+## what it does on your mac
+
+- **no internet:** the source has no networking code, and the running app
+  holds no network connections.
+- **can't see your screen:** it never uses screen capture and never asks for
+  Screen Recording permission. the effects are applied inside macOS, so the
+  screen's pixels never reach the app.
+- **can't see your typing:** there's no keyboard monitoring. it only receives
+  its own two hotkeys.
+- **what it leaves behind:** one settings file
+  (`~/Library/Preferences/prankvirus.plist`, holding the timeout), the login item
+  Homebrew creates (`~/Library/LaunchAgents/sh.brew.prankvirus.plist`), and a log
+  file. `prankvirus stop` removes the login item; `brew uninstall` removes the app.
+- **other programs it runs:** only `brew` (for `start` and `stop`) and `pgrep`
+  (so `prankvirus check` can tell whether it's already running).
+- **launches at login:** `prankvirus start` makes it start at every login until
+  `prankvirus stop`.
+- **uses private Apple APIs:** the effects use undocumented Core Animation
+  layers and filters. that's unusual, not dangerous.
+
+### check it yourself
+
+Homebrew builds it on your Mac from the public source in this repo, at a tagged
+version pinned by checksum. nothing prebuilt is downloaded, and the whole app is
+under 1,000 lines of Swift in [`Sources/`](Sources).
+
+show that the running app has no network connections (prints nothing if there are none):
+
+```bash
+lsof -nP -i -a -p $(pgrep -x prankvirus)
+```
+
+search the source for networking, screen capture or keyboard monitoring
+(prints nothing if there is none):
+
+```bash
+grep -rnE "URLSession|NWConnection|ScreenCaptureKit|CGWindowListCreateImage|CGEventTap|addGlobalMonitor" Sources
+```
+
 ## Build from source
 
 Requires macOS 14 or later and a Swift toolchain (the Command Line Tools are enough).
